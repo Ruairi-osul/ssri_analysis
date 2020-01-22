@@ -48,4 +48,4 @@ Anova(model_prop)
 lsmeans(model_prop, pairwise ~ group_name)
 
 model_mag <- lm(pearson_mag ~ group_name, data=dfa)
-Anova(model_mag)
+anova(model_mag)
