@@ -1,6 +1,6 @@
 from ephys_queries import select_spike_times
 from ephys_queries import db_setup_core
-from spiketimes.df import cross_corr_df_test
+from spiketimes.df import cross_corr_df_test, cross_corr_between_groups_test
 import dotenv
 from pathlib import Path
 import pandas as pd
@@ -35,27 +35,38 @@ df = df[df["type"] != "no_baseline"]
 
 # calculate cross corr
 recording_sessions = df_labels["session_name"].unique()
-fnames = []
+gw_frames = []
+sr_frames = []
 
 for session in recording_sessions:
     df_sub = df[df["session_name"] == session].copy()
-    df_cc = cross_corr_df_test(
+
+    gw = cross_corr_between_groups_test(
         df_sub,
-        jitter_window_size=0.4,
-        n_boot=1000,
+        group_col="type",
         spiketimes_col="spiketimes",
         neuron_col="neuron_id",
         n_cores=15,
+        bin_window=0.01,
+        num_lags=100,
     )
+    gw["session_name"] = session
+    gw_frames.append(gw)
 
-    df_cc["session_name"] = session
+    sr = cross_corr_df_test(
+        df_sub[df_sub["type"] == "slow_regular"].copy(),
+        spiketimes_col="spiketimes",
+        neuron_col="neuron_id",
+        n_cores=15,
+        bin_window=0.01,
+        num_lags=100,
+    )
+    sr["session_name"] = session
+    sr_frames.append(sr)
 
-    fname = str(tmp_dir / f"{session}_cc.feather")
 
-    write_feather(df_cc, fname)
+gw = pd.concat(gw_frames, axis=0)
+gw.to_csv(data_dir / "cross_corr_gw.csv", index=False)
 
-    fnames.append(fname)
-
-cc_frames = [read_feather(fname) for fname in fnames]
-df_cc = pd.concat(cc_frames, axis=0)
-df_cc.to_csv(data_dir / "cross_corr_400ms_jitter.csv", index=False)
+sr = pd.concat(sr_frames, axis=0)
+sr.to_csv(data_dir / "cross_corr_sr.csv", index=False)
