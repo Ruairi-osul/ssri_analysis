@@ -1,0 +1,8 @@
+slow_regular:   #FF0100 (red)
+fast_firing:    #00B34E (green)
+slow_irregular: #806A9D (purple)
+
+control:        #7E8283 (grey)
+other1:         #F6931D (orange)
+other2:         #31A6D9 (blue)
+
