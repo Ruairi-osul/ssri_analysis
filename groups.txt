@@ -1,0 +1,14 @@
+acute groups = ("acute_citalopram", 
+                "acute_saline", 
+                "shock", 
+                "sham", 
+                "acute_cit", 
+                "acute_sal"
+                )
+
+chronic_groups = ("citalopram_continuation",
+                  "chronic_saline",
+                  "citalopram_discontinuation", 
+                  "chronic_citalopram", 
+                  "chronic_saline_"
+                  )
