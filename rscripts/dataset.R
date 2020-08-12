@@ -1,5 +1,6 @@
 library(tidyverse)
 
+data_dir <- file.path("data")
 
 colors <- c(
   "FALSE"="#7E8283",
@@ -111,3 +112,25 @@ df %>%
   theme(legend.title=element_text(size=14), 
         legend.text=element_text(size=14),
   )
+
+##################################
+
+library(ggthemes)
+
+df %>%
+  count(session_name) %>%
+  summarise(m=mean(n))
+
+df %>%
+  count(session_name) %>%
+  mutate(id=factor(rownames(.)),
+         id=fct_reorder(id, n)) %>%
+  ggplot(aes(y=id, x=n)) +
+  geom_col(fill="#7E8283", lw=10) +
+  geom_vline(xintercept=24.6, linetype="dashed", size=1.3, color="black") +
+  theme_clean() + 
+  labs(x="Number of Neurons Recorded", y="Individual Recording Sessions") +
+  theme(axis.text.y = element_blank(),
+        axis.text.x = element_text(size=12),
+        axis.title.x = element_text(size=15),
+        axis.title.y = element_text(size=15))
