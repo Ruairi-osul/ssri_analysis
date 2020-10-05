@@ -1,0 +1,8 @@
+slow_regular:       #1C9E77
+slow-irregular:     #A6761D
+fast-firing:        #7570B3
+
+
+control:            #7E8283 (grey)
+activated:          #F6931D (orange)
+inhibited:          #31A6D9 (blue)
